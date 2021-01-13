@@ -2,20 +2,23 @@ import socket
 
 
 def Main():
-    
+
     host = '127.0.0.1'
-   
+
     port = 12345
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # connect to server on local computer
     s.connect((host, port))
+    username = input("Please enter your username")
+    s.send(username.encode('ascii'))
+    print(f"We send the username{username} to the server")
     data = s.recv(1024)
     print("Explanation is : ", str(data.decode('ascii')))
-    counter = 0 
+    counter = 0
     while True:
-        counter = counter + 1
+        # counter = counter + 1
         message = input("Please input word or letter ")
         s.send(message.encode('ascii'))
 
@@ -31,9 +34,7 @@ def Main():
             break
         print("Received: --->", received)
         received = ""
-        print("Iteration no ", counter)
-        
-
+        # print("Iteration no ", counter)
 
     s.close()
 

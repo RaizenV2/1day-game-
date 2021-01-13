@@ -1,0 +1,4 @@
+andrei 3 
+marius 4
+andrei 6
+dreadis 4

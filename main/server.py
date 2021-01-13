@@ -14,6 +14,20 @@ word_list = {
 }
 
 
+def show_top():
+    filepath = 'top.txt'
+    with open(filepath) as fp:
+        line = fp.readline()
+        while line:
+            print(line.strip(''))
+            line = fp.readline()
+
+
+def append_value(usersname, score):
+    with open('top.txt', 'a') as myFile:
+        myFile.writelines(usersname+' '+str(score)+'\n')
+
+
 def get_word():
     entry_list = list(word_list)
     random_key = random.choice(entry_list)
@@ -21,6 +35,7 @@ def get_word():
 
 
 def threaded(c):
+
     list = get_word()
     word = list[0]
     print("THe lenght of the word is ", len(word))
@@ -33,10 +48,13 @@ def threaded(c):
     counter = 0
     print("The word for the explanation is ", list[0])
     print("The explaniaton is :", list[1])
+    username_bytes = c.recv(1024)
+    username = str(username_bytes.decode('ascii'))
+    print(f"We received the username{username}")
     c.send(list[1].encode("ascii"))
     print("We sent the data through the network ")
     while not guessed and tries > 0:
-        counter = counter + 1
+        # counter = counter + 1
         # data received from client
         data = c.recv(1024)
         print("We received data from the clinet")
@@ -68,6 +86,7 @@ def threaded(c):
                 tries -= 1
                 guessed_words.append(guess)
             else:
+                .0
                 guessed = True
                 word_completion = word
                 break
@@ -75,7 +94,7 @@ def threaded(c):
             print("Wrong the wors is still : !", word_completion)
         print("We send to th client the word : ", word_completion)
         print("The number of the tries left", tries)
-        print("Iteration no", counter)
+        # print("Iteration no", counter)
         if not guessed and tries > 0:
             c.send(word_completion.encode('ascii'))
 
@@ -90,6 +109,8 @@ def threaded(c):
 
     # connection closed
     print("We closed the connection between them!\n")
+    append_value(username, tries)
+    show_top()
     c.close()
 
 
